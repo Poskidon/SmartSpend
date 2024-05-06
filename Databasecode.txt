@@ -1,0 +1,98 @@
+-- Création de la base de données
+CREATE DATABASE SmartSpendDB;
+
+-- Sélection de la base de données pour l'utilisation
+USE SmartSpendDB;
+
+-- Création de la table 'Utilisateurs'
+CREATE TABLE Utilisateurs (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    Nom VARCHAR(255),
+    Email VARCHAR(255) UNIQUE,
+    MotDePasse VARCHAR(255),
+    DateInscription DATE
+);
+
+-- Création de la table 'Categories'
+CREATE TABLE Categories (
+    CategorieID INT AUTO_INCREMENT PRIMARY KEY,
+    Nom VARCHAR(255) UNIQUE
+);
+
+-- Création de la table 'Transactions'
+CREATE TABLE Transactions (
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    CategorieID INT,
+    Montant DECIMAL(10, 2),
+    Date DATE,
+    Description TEXT,
+    FOREIGN KEY (UserID) REFERENCES Utilisateurs(UserID),
+    FOREIGN KEY (CategorieID) REFERENCES Categories(CategorieID)
+);
+
+-- Création de la table 'ObjectifsFinanciers'
+CREATE TABLE ObjectifsFinanciers (
+    ObjectifID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    Nom VARCHAR(255),
+    MontantCible DECIMAL(10, 2),
+    DateCible DATE,
+    Progression DECIMAL(10, 2),
+    FOREIGN KEY (UserID) REFERENCES Utilisateurs(UserID)
+);
+
+-- Création de la table 'ProduitsAlimentaires'
+CREATE TABLE ProduitsAlimentaires (
+    ProduitID INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionID INT,
+    Nom VARCHAR(255),
+    Quantite INT,
+    Prix DECIMAL(10, 2),
+    NoteNutritionnelle VARCHAR(255),
+    FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
+);
+
+-- Création de la table 'Alertes'
+CREATE TABLE Alertes (
+    AlerteID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    Message TEXT,
+    DateHeure DATETIME,
+    FOREIGN KEY (UserID) REFERENCES Utilisateurs(UserID)
+);
+-- Insert default categories into the Categories table
+INSERT INTO Categories (Nom) VALUES
+('Nourriture'),
+('Logement'),
+('Transport'),
+('Loisirs'),
+('Santé'),
+('Éducation'),
+('Factures'),
+('Vêtements'),
+('Épargne'),
+('Divertissement'),
+('Voyage'),
+('Assurance'),
+('Impôts'),
+('Remboursements de dettes'),
+('Autres');
+CREATE TABLE Transactions (
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    Montant DECIMAL(10, 2),
+    Date DATE,
+    Description TEXT,
+    FOREIGN KEY (UserID) REFERENCES Utilisateurs(UserID)
+);
+CREATE TABLE MonthlyBudgets (
+    BudgetID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    MonthYear DATE, -- Storing only the first day of each month
+    BudgetAmount DECIMAL(10, 2),
+    SavingsGoal DECIMAL(10, 2),
+    FOREIGN KEY (UserID) REFERENCES Utilisateurs(UserID) ON DELETE CASCADE
+);
+
+
